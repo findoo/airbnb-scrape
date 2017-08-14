@@ -17,8 +17,8 @@ def getListingName(soup):
 
 
 def getDetails(soup):
-    details_div = soup.find('div', {'id': 'details'}).findAll('strong')
-    key_values = [x.parent.text for x in details_div
+    strongs = soup.find('div', {'id': 'details'}).findAll('strong')
+    key_values = [x.parent.text for x in strongs
                   if x.parent.name == 'div'
                   and ':' in x.parent.text]
 
@@ -31,10 +31,13 @@ def getDetails(soup):
 
 def getAmenities(soup):
     amenities = set()
-    for span in soup.find('div', {'class': 'amenities'}).findAll('span'):
-        if 'Amenities' not in span.text and 'More' not in span.text:
-            amenities.add(span.text)
-    return ', '.join(amenities)
+    for column in soup.find('div', {'class': 'amenities'}).findAll('div', {'class': 'col-sm-6'}):
+        amenities.update([block.text for block in column.findAll('div')
+                          if block.text != ""
+                          and len(block.findAll('del')) == 0
+                          and 'Amenities' not in block.text
+                          and 'More' not in block.text])
+    return ', '.join(sorted(amenities))
 
 
 def fetchRoom(room):
