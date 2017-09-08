@@ -13,7 +13,7 @@ ROOMS = [14531512, 19278160, 19292873]
 ROOMURL = Template('https://www.airbnb.co.uk/rooms/$roomId')
 
 def getListingName(soup):
-    return soup.find('div', {'id': 'listing_name'}).text
+    return soup.find('div', {'itemprop': 'name'}).text
 
 
 def getDetails(soup):
